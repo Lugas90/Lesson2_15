@@ -1,30 +1,26 @@
 package com.example.lesson2_15;
 
-import com.example.lesson2_15.Exceptions.ArrayOutOfLimitException;
 import com.example.lesson2_15.Exceptions.ItemNotFoundException;
 
-import java.sql.Array;
 import java.util.Arrays;
-import java.util.Random;
 
-
-public class WorkToArray implements StringList {
+public class WorkToArray implements IntegerList {
 
     private int size;
-    private final String[] storage;
+    private Integer[] storage;
 
 
     public WorkToArray(int arraySize) {
-        storage = new String[arraySize];
+        storage = new Integer[arraySize];
     }
 
     public WorkToArray() {
-        storage = new String[3];
+        storage = new Integer[3];
     }
 
     @Override
-    public String add(String item) {
-        validateSize();
+    public Integer add(Integer item) {
+        growSize();
         validateItem(item);
         storage[size++] = item;
 
@@ -32,8 +28,8 @@ public class WorkToArray implements StringList {
     }
 
     @Override
-    public String add(int index, String item) {
-        validateSize();
+    public Integer add(int index, Integer item) {
+        growSize();
         validateItem(item);
         validateIndex(index);
 
@@ -49,7 +45,7 @@ public class WorkToArray implements StringList {
     }
 
     @Override
-    public String set(int index, String item) {
+    public Integer set(int index, Integer item) {
         validateIndex(index);
         validateItem(item);
         storage[index] = item;
@@ -57,16 +53,16 @@ public class WorkToArray implements StringList {
     }
 
     @Override
-    public String remove(String item) {
+    public Integer remove(Integer item) {
         validateItem(item);
         int index = indexOf(item);
         return remove(index);
     }
 
     @Override
-    public String remove(int index) {
+    public Integer remove(int index) {
         validateIndex(index);
-        String item = storage[index];
+        Integer item = storage[index];
         if (index != size) {
             System.arraycopy(storage, index + 1, storage, index, size - index);
         }
@@ -75,12 +71,14 @@ public class WorkToArray implements StringList {
     }
 
     @Override
-    public boolean contains(String item) {
-        return indexOf(item) != -1;
+    public boolean contains(Integer item) {
+        Integer[] storageCopy = toArray();
+        sort(storageCopy);
+        return binarySearch(storageCopy, item);
     }
 
     @Override
-    public int indexOf(String item) {
+    public int indexOf(Integer item) {
         for (int i = 0; i < size; i++) {
             if (storage[i].equals(item)) {
                 return i;
@@ -90,7 +88,7 @@ public class WorkToArray implements StringList {
     }
 
     @Override
-    public int lastIndexOf(String item) {
+    public int lastIndexOf(Integer item) {
         for (int i = size - 1; i >= 0; i--) {
             if (storage[i].equals(item)) {
                 return i;
@@ -100,13 +98,13 @@ public class WorkToArray implements StringList {
     }
 
     @Override
-    public String get(int index) {
+    public Integer get(int index) {
         validateIndex(index);
         return storage[index];
     }
 
     @Override
-    public boolean equals(StringList otherList) {
+    public boolean equals(IntegerList otherList) {
         if (otherList.equals(storage)) {
             return true;
         }
@@ -125,26 +123,23 @@ public class WorkToArray implements StringList {
 
     @Override
     public void clear() {
-        for (int i = 0; i < storage.length; i++) {
-            storage[i] = String.valueOf(null);
-            size = 0;
-        }
+        size = 0;
     }
 
     @Override
-    public String[] toArray() {
+    public Integer[] toArray() {
         return Arrays.copyOf(storage, size);
     }
 
-    private void validateItem(String item) {
+    private void validateItem(Integer item) {
         if (item == null) {
             throw new ItemNotFoundException("Элемент не найден");
         }
     }
 
-    private void validateSize() {
+    private void growSize() {
         if (size == storage.length) {
-            throw new ArrayOutOfLimitException("хранилище заполнено");
+            grow();
         }
     }
 
@@ -154,21 +149,64 @@ public class WorkToArray implements StringList {
         }
     }
 
-    @Override
-    public String toString() {
-        return Arrays.toString(storage);
+    private void grow() {
+        storage = Arrays.copyOf(storage, size + size / 2);
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        WorkToArray that = (WorkToArray) o;
-        return Arrays.equals(storage, that.storage);
+    private static void swapElements(Integer[] arr, int left, int right) {
+        int temp = arr[left];
+        arr[left] = arr[right];
+        arr[right] = temp;
     }
 
-    @Override
-    public int hashCode() {
-        return Arrays.hashCode(storage);
+    private static void sort (Integer [] arr){
+        quickSort(arr, 0, arr.length -1);
+    }
+
+
+
+    public static void quickSort(Integer[] arr, int begin, int end) {
+        if (begin < end) {
+            Integer partitionIndex = partition(arr, begin, end);
+
+            quickSort(arr, begin, partitionIndex - 1);
+            quickSort(arr, partitionIndex + 1, end);
+        }
+    }
+
+    private static int partition(Integer[] arr, int begin, int end) {
+        int pivot = arr[end];
+        int i = (begin - 1);
+
+        for (int j = begin; j < end; j++) {
+            if (arr[j] <= pivot) {
+                i++;
+
+                swapElements(arr, i, j);
+            }
+        }
+
+        swapElements(arr, i + 1, end);
+        return i + 1;
+    }
+
+    public static boolean binarySearch(Integer[] arr, Integer item) {
+        int min = 0;
+        int max = arr.length - 1;
+
+        while (min <= max) {
+            int mid = (min + max) / 2;
+
+            if (item == arr[mid]) {
+                return true;
+            }
+
+            if (item < arr[mid]) {
+                max = mid - 1;
+            } else {
+                min = mid + 1;
+            }
+        }
+        return false;
     }
 }

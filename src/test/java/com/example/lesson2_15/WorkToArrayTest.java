@@ -1,11 +1,10 @@
 package com.example.lesson2_15;
 
-import com.example.lesson2_15.Exceptions.ArrayOutOfLimitException;
 import com.example.lesson2_15.Exceptions.ItemNotFoundException;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static com.example.lesson2_15.Constants.*;
+import static com.example.lesson2_15.WorkToArray.binarySearch;
 import static org.junit.jupiter.api.Assertions.*;
 
 class WorkToArrayTest {
@@ -15,105 +14,100 @@ class WorkToArrayTest {
 
     @Test
     void shouldReturnAdd() {
-        String[] expected = new String[]{PRIVET, POKA};
-        out.add(PRIVET);
-        out.add(POKA);
-        String[] actual = out.toArray();
+        Integer[] expected = new Integer[]{ONE, TWO};
+        out.add(ONE);
+        out.add(TWO);
+        Integer[] actual = out.toArray();
         assertArrayEquals(expected, actual);
     }
 
     @Test
-    void shouldReturnAddStringAndSize() {
-        String[] expected = new String[]{PRIVET, POKA};
-        out.add(POKA);
-        out.add(0, PRIVET);
-        String[] actual = out.toArray();
+    void shouldReturnAddIntegerAndSize() {
+        Integer[] expected = new Integer[]{ONE, TWO};
+        out.add(TWO);
+        out.add(0, ONE);
+        Integer[] actual = out.toArray();
         assertArrayEquals(expected, actual);
     }
 
     @Test
     void shouldReturnSet() {
-        String[] expected = new String[]{PRIVET, POKA};
-        out.add(PRIVET);
-        out.add(ZACHEM);
-        out.set(1, POKA);
-        String[] actual = out.toArray();
+        Integer[] expected = new Integer[]{ONE, TWO};
+        out.add(ONE);
+        out.add(THREE);
+        out.set(1, TWO);
+        Integer[] actual = out.toArray();
         assertArrayEquals(expected, actual);
     }
 
     @Test
-    void shouldReturnRemoveToString() {
-        String[] expected = new String[]{PRIVET, POKA};
-        out.add(PRIVET);
-        out.add(POKA);
-        out.add(ZACHEM);
-        out.remove(ZACHEM);
-        String[] actual = out.toArray();
+    void shouldReturnRemoveToInteger() {
+        Integer[] expected = new Integer[]{ONE};
+        out.add(ONE);
+        out.add(TWO);
+        out.remove(TWO);
+        Integer[] actual = out.toArray();
         assertArrayEquals(expected, actual);
     }
 
     @Test
     void shouldReturnRemoveToSize() {
-        String[] expected = new String[]{PRIVET, POKA};
-        out.add(PRIVET);
-        out.add(POKA);
-        out.add(ZACHEM);
-        out.remove(2);
-        String[] actual = out.toArray();
+        Integer[] expected = new Integer[]{ONE};
+        out.add(ONE);
+        out.add(TWO);
+        out.remove(1);
+        Integer[] actual = out.toArray();
         assertArrayEquals(expected, actual);
     }
 
     @Test
     void shouldReturnContains() {
-        out.add(PRIVET);
-        out.contains(PRIVET);
-        Assertions.assertTrue(true);
+        out.add(ONE);
+        out.add(TWO);
+        assertTrue(out.contains(ONE));
     }
 
     @Test
     void shouldReturnIndexOf() {
         int expected = 1;
-        out.add(PRIVET);
-        out.add(POKA);
-        int actual = out.indexOf(POKA);
+        out.add(ONE);
+        out.add(TWO);
+        int actual = out.indexOf(TWO);
         assertEquals(expected, actual);
     }
 
     @Test
     void shouldReturnLastIndexOf() {
         int expected =0;
-        out.add(PRIVET);
-        out.add(POKA);
-        out.add(ZACHEM);
-        int actual = out.lastIndexOf(PRIVET);
+        out.add(ONE);
+        out.add(TWO);
+        out.add(THREE);
+        int actual = out.lastIndexOf(ONE);
         assertEquals(expected, actual);
     }
 
     @Test
     void shouldReturnGet() {
-        out.add(PRIVET);
-        out.add(POKA);
-        out.add(ZACHEM);
-        String expected = POKA;
-        String actual = out.get(1);
+        out.add(ONE);
+        out.add(TWO);
+        out.add(THREE);
+        Integer expected = TWO;
+        Integer actual = out.get(1);
         assertEquals(expected, actual);
     }
 
     @Test
     void shouldReturnEquals() {
-        String[] expected = new String[]{PRIVET, POKA};
-        out.add(PRIVET);
-        out.add(POKA);
-        String[] actual = out.toArray();
-        expected.equals(actual);
-        assertTrue(true);
+        Integer[] expected = new Integer[] {ONE, TWO};
+        Integer[] actual = expected;
+        assertTrue(expected.equals(actual));
     }
 
     @Test
     void shouldReturnSize() {
-        out.add(PRIVET);
-        out.add(POKA);
-        out.add(ZACHEM);
+        out.add(ONE);
+        out.add(TWO);
+        out.add(THREE);
         int expected = 3;
         int actual = out.size();
         assertEquals(expected, actual);
@@ -121,8 +115,8 @@ class WorkToArrayTest {
 
     @Test
     void shouldReturnIsEmpty() {
-        out.add(PRIVET);
-        out.remove(PRIVET);
+        out.add(ONE);
+        out.remove(ONE);
         out.isEmpty();
         assertTrue(true);
 
@@ -131,29 +125,32 @@ class WorkToArrayTest {
 
     @Test
     void shouldReturnClear() {
-        out.add(PRIVET);
-        out.add(POKA);
-        assertThrows(NullPointerException.class, () -> out.clear());
-    }
-
-    @Test
-    void shouldReturnArrayOutOfLimitException() {
-        out.add(PRIVET);
-        out.add(POKA);
-        out.add(ZATEM);
-        assertThrows(ArrayOutOfLimitException.class, () -> out.add(ZACHEM));
+        out.add(ONE);
+        out.add(TWO);
+        Integer [] expected = new Integer [0];
+        out.clear();
+        Integer[] actual = out.toArray();
+        assertArrayEquals(expected, actual);
     }
 
     @Test
     void shouldReturnNotFoundException () {
-        out.add(PRIVET);
-        out.add(POKA);
-        out.add(ZACHEM);
-        String expected = POKA;
-        String actual = out.get(1);
+        out.add(ONE);
+        out.add(TWO);
+        out.add(THREE);
+        Integer expected = TWO;
+        Integer actual = out.get(1);
         assertThrows(ItemNotFoundException.class, () -> out.get(5));
-
     }
+
+    @Test
+    void shouldReturnBinarySearch () {
+        out.add(ONE);
+        out.add(TWO);
+       boolean expected =  binarySearch(out.toArray(), ONE);
+        assertTrue(expected);
+    }
+
 }
 
 
