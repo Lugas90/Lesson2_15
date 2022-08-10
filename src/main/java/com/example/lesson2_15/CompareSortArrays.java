@@ -52,6 +52,30 @@ public class CompareSortArrays {
             arr[j] = temp;
         }
     }
+        public static void quickSort(int[] arr, int begin, int end) {
+            if (begin < end) {
+                int partitionIndex = partition(arr, begin, end);
+
+                quickSort(arr, begin, partitionIndex - 1);
+                quickSort(arr, partitionIndex + 1, end);
+            }
+        }
+
+        private static int partition(int[] arr, int begin, int end) {
+            int pivot = arr[end];
+            int i = (begin - 1);
+
+            for (int j = begin; j < end; j++) {
+                if (arr[j] <= pivot) {
+                    i++;
+
+                    swapElements(arr, i, j);
+                }
+            }
+
+            swapElements(arr, i + 1, end);
+            return i + 1;
+        }
 
 
     public static void main(String[] args) {
@@ -61,7 +85,7 @@ public class CompareSortArrays {
         int[] arr3 = Arrays.copyOf(arr1, 100_000);
 
         long start = System.currentTimeMillis();
-        sortBubble(arr1);
+        quickSort(arr1, 0, arr1.length);
         System.out.println(System.currentTimeMillis() - start);
     }
 }

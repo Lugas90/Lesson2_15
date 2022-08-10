@@ -1,15 +1,13 @@
 package com.example.lesson2_15;
 
-import com.example.lesson2_15.Exceptions.ArrayOutOfLimitException;
 import com.example.lesson2_15.Exceptions.ItemNotFoundException;
 
 import java.util.Arrays;
 
-
 public class WorkToArray implements IntegerList {
 
     private int size;
-    private final Integer[] storage;
+    private Integer[] storage;
 
 
     public WorkToArray(int arraySize) {
@@ -22,7 +20,7 @@ public class WorkToArray implements IntegerList {
 
     @Override
     public Integer add(Integer item) {
-        validateSize();
+        growSize();
         validateItem(item);
         storage[size++] = item;
 
@@ -31,7 +29,7 @@ public class WorkToArray implements IntegerList {
 
     @Override
     public Integer add(int index, Integer item) {
-        validateSize();
+        growSize();
         validateItem(item);
         validateIndex(index);
 
@@ -139,9 +137,9 @@ public class WorkToArray implements IntegerList {
         }
     }
 
-    private void validateSize() {
+    private void growSize() {
         if (size == storage.length) {
-            throw new ArrayOutOfLimitException("хранилище заполнено");
+            grow();
         }
     }
 
@@ -150,19 +148,49 @@ public class WorkToArray implements IntegerList {
             throw new ItemNotFoundException("Элемент не найден");
         }
     }
-    public static void sort(Integer[] arr) {
-        for (int i = 1; i < arr.length; i++) {
-            int temp = arr[i];
-            int j = i;
-            while (j > 0 && arr[j - 1] >= temp) {
-                arr[j] = arr[j - 1];
-                j--;
-            }
-            arr[j] = temp;
+
+    private void grow() {
+        storage = Arrays.copyOf(storage, size + size / 2);
+    }
+
+    private static void swapElements(Integer[] arr, int left, int right) {
+        int temp = arr[left];
+        arr[left] = arr[right];
+        arr[right] = temp;
+    }
+
+    private static void sort (Integer [] arr){
+        quickSort(arr, 0, arr.length -1);
+    }
+
+
+
+    public static void quickSort(Integer[] arr, int begin, int end) {
+        if (begin < end) {
+            Integer partitionIndex = partition(arr, begin, end);
+
+            quickSort(arr, begin, partitionIndex - 1);
+            quickSort(arr, partitionIndex + 1, end);
         }
     }
 
-    public static boolean binarySearch(Integer [] arr, Integer item) {
+    private static int partition(Integer[] arr, int begin, int end) {
+        int pivot = arr[end];
+        int i = (begin - 1);
+
+        for (int j = begin; j < end; j++) {
+            if (arr[j] <= pivot) {
+                i++;
+
+                swapElements(arr, i, j);
+            }
+        }
+
+        swapElements(arr, i + 1, end);
+        return i + 1;
+    }
+
+    public static boolean binarySearch(Integer[] arr, Integer item) {
         int min = 0;
         int max = arr.length - 1;
 

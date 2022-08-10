@@ -1,8 +1,6 @@
 package com.example.lesson2_15;
 
-import com.example.lesson2_15.Exceptions.ArrayOutOfLimitException;
 import com.example.lesson2_15.Exceptions.ItemNotFoundException;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static com.example.lesson2_15.Constants.*;
@@ -65,7 +63,8 @@ class WorkToArrayTest {
     @Test
     void shouldReturnContains() {
         out.add(ONE);
-        Assertions.assertTrue(out.contains(ONE));
+        out.add(TWO);
+        assertTrue(out.contains(ONE));
     }
 
     @Test
@@ -132,14 +131,6 @@ class WorkToArrayTest {
         out.clear();
         Integer[] actual = out.toArray();
         assertArrayEquals(expected, actual);
-    }
-
-    @Test
-    void shouldReturnArrayOutOfLimitException() {
-        out.add(ONE);
-        out.add(TWO);
-        out.add(FOUR);
-        assertThrows(ArrayOutOfLimitException.class, () -> out.add(THREE));
     }
 
     @Test
